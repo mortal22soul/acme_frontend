@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .stats {
+    @apply text-blue-500 text-[8rem] lg:text-[10rem];
+  }
+
+  .stats-bg {
+    @apply rounded-[4rem] bg-gray-100 size-64 lg:size-72 flex flex-col items-center justify-center;
+  }
+
+  .review {
+    @apply box-border max-w-sm p-5 bg-white border-2 border-gray-200 shadow md:p-8 rounded-3xl;
+  }
+}
