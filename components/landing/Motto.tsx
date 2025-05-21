@@ -5,7 +5,7 @@ import beach3 from "@/app/assets/beach3.jpg";
 
 export default function Motto() {
   return (
-    <div className=" items-center justify-between hidden px-32 pb-24 lg:flex">
+    <div className="items-center justify-between hidden px-32 lg:pb-28 lg:flex">
       <Image src={beach1} alt="" className="rounded-full size-40" />
       <p className="text-lg font-bold">Explore the Skies with Confidence</p>
       <Image src={beach2} alt="" className="rounded-full size-32" />

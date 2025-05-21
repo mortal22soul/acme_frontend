@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <div className="relative">
+    <div className="relative pt-2 lg:pb-28">
       {/* Background Image */}
       <div className="flex justify-center">
         <Image

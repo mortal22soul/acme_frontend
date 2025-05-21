@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const NotFound: React.FC = () => {
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-center">
+    <div className="flex flex-col justify-center items-center min-h-screen  text-center">
       <div className="text-6xl font-bold">404</div>
       <div className="mt-4 text-2xl font-semibold text-gray-800">
         Oops! Page Not Found

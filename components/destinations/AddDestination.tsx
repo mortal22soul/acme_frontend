@@ -15,6 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import {
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  Select,
+} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +33,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 
 const formSchema = z.object({
+  agentId: z.coerce
+    .number()
+    .int()
+    .min(1, "Agent ID must be a positive integer."),
   destination: z.string().min(2, "Destination must be at least 2 characters."),
   origin: z.string().min(2, "Origin must be at least 2 characters."),
   departureDate: z.date(),
@@ -34,6 +46,7 @@ const formSchema = z.object({
     .number()
     .int()
     .min(1, "Available seats must be at least 1."),
+  type: z.enum(["one-way", "round-trip"]),
   images: z
     .string()
     .transform(
@@ -56,6 +69,8 @@ export default function AddDestination() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      agentId: 0,
+      type: "one-way",
       destination: "",
       origin: "",
       departureDate: new Date(),
@@ -66,14 +81,52 @@ export default function AddDestination() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Form data: ", data);
+    const formattedData = {
+      ...data,
+      price: String(data.price),
+      departureDate: data.departureDate.toISOString(),
+      returnDate: data.returnDate?.toISOString(),
+    };
+    console.log("Formatted data: ", formattedData);
+    const res = await fetch("http://localhost:3000/trips", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedData),
+    });
+    if (!res.ok) {
+      console.error("Failed to add destination");
+      return;
+    }
   };
 
   return (
     <div className="max-xl mx-auto shadow-md rounded-lg p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Agent ID */}
+          <FormField
+            control={form.control}
+            name="agentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Agent ID</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="1"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* Destination Input */}
           <FormField
             control={form.control}
@@ -226,6 +279,30 @@ export default function AddDestination() {
                 <FormMessage />
               </FormItem>
             )}
+          />
+
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Trip type</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="One Way" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="one-way">One Way</SelectItem>
+                      <SelectItem value="round-trip">Round Trip</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           {/* Images Input */}

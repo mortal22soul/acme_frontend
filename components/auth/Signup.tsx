@@ -158,7 +158,11 @@ export default function Signup() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-10">
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-black ">
+      <h2 className="font-bold text-xl pb-4 text-neutral-800 dark:text-neutral-200">
+        Welcome to ACME
+      </h2>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -433,7 +437,7 @@ export default function Signup() {
           </Button>
         </form>
       </Form>
-    </main>
+    </div>
   );
 }
 

@@ -108,7 +108,7 @@ export default function Services() {
   ];
 
   return (
-    <section className="px-6 py-12 lg:px-16 lg:py-24 max-w-7xl mx-auto">
+    <section className="px-6 pb-12 lg:px-16 lg:pb-28 max-w-7xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold lg:text-5xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-400">
           Discover The World From Above
