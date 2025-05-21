@@ -18,14 +18,21 @@
 // }
 
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 
-const Counter = ({ from, to, duration = 2 }) => {
-  const [count, setCount] = React.useState(from);
+interface CounterProps {
+  from: number;
+  to: number;
+  duration?: number;
+}
+
+const Counter: React.FC<CounterProps> = ({ from, to, duration = 2 }) => {
+  const [count, setCount] = useState(from);
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const startRef = useRef(from);
 
   useEffect(() => {
     if (isInView) {
@@ -35,22 +42,23 @@ const Counter = ({ from, to, duration = 2 }) => {
         transition: { duration: 0.5 },
       });
 
-      let start = from;
       const increment = (to - from) / (duration * 60); // 60fps
-
       const timer = setInterval(() => {
-        start += increment;
-        if (start >= to) {
+        startRef.current += increment;
+        if (startRef.current >= to) {
           setCount(to);
           clearInterval(timer);
         } else {
-          setCount(Math.floor(start));
+          setCount(startRef.current);
         }
       }, 1000 / 60);
 
       return () => clearInterval(timer);
     }
-  }, [from, to, isInView, controls]);
+  }, [from, to, duration, isInView, controls]); // <-- duration added here
+
+  const isDecimal = to % 1 !== 0;
+  const displayValue = isDecimal ? count.toFixed(1) : Math.floor(count);
 
   return (
     <motion.div
@@ -58,7 +66,7 @@ const Counter = ({ from, to, duration = 2 }) => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={controls}
       className="text-5xl font-bold bg-gradient-to-br from-blue-600 to-cyan-400 bg-clip-text text-transparent">
-      {to % 1 === 0 ? Math.floor(count) : count.toFixed(1)}+
+      {displayValue}+
     </motion.div>
   );
 };

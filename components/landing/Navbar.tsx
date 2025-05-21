@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { FloatingNav } from "@/components/ui/floating-navbar";
 import {
-  IconHome,
-  IconMessage,
+  // IconHome,
+  // IconMessage,
   IconUser,
   IconPlane,
   IconLogin,
@@ -13,26 +11,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Nav() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navItems = [
-    {
-      name: "Home",
-      link: "/",
-      icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
-    },
-    {
-      name: "About",
-      link: "/about",
-      icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
-    },
-    {
-      name: "Contact",
-      link: "/contact",
-      icon: (
-        <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
-      ),
-    },
-  ];
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = false;
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-lg border-b border-gray-100">
@@ -84,9 +64,6 @@ export default function Nav() {
           <span className="block w-8 h-0.5 bg-gray-700"></span>
           <span className="block w-6 h-0.5 bg-gray-700"></span>
         </button>
-
-        {/* Floating Navigation (Mobile) */}
-        <FloatingNav navItems={navItems} className="sm:hidden" />
       </nav>
     </header>
   );

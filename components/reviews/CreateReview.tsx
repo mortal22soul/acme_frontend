@@ -57,26 +57,26 @@ export default function CreateReview() {
                 <FormLabel>Rating</FormLabel>
                 <FormControl>
                   <RadioGroup
-                    value={field.value}
+                    value={String(field.value)}
                     onValueChange={field.onChange}>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={1} id="rating-1" />
+                      <RadioGroupItem value="1" id="rating-1" />
                       <Label htmlFor="rating-1">1</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={2} id="rating-2" />
+                      <RadioGroupItem value="2" id="rating-2" />
                       <Label htmlFor="rating-2">2</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={3} id="rating-3" />
+                      <RadioGroupItem value="3" id="rating-3" />
                       <Label htmlFor="rating-3">3</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={4} id="rating-4" />
+                      <RadioGroupItem value="4" id="rating-4" />
                       <Label htmlFor="rating-4">4</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={5} id="rating-5" />
+                      <RadioGroupItem value="5" id="rating-5" />
                       <Label htmlFor="rating-5">5</Label>
                     </div>
                   </RadioGroup>
