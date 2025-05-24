@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
 import {
   Form,
@@ -21,31 +23,52 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+
+
 const formSchema = z.object({
   rating: z.number().int().min(1, "Rating must be at least 1."),
-  title: z.string().min(2, "Title must be at least 2 characters.").optional(),
-  comment: z
-    .string()
-    .min(2, "Comment must be at least 2 characters.")
-    .optional(),
+  title: z.string().min(2, "Title must be at least 2 characters."),
+  comment: z.string().min(2, "Comment must be at least 2 characters."),
 });
 
 export default function CreateReview() {
+  const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const params = useParams();
+
+  const tripId = Number(params?.id);
+  const customerId = Number(params?.customerId) ?? 1;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rating: 1, // Default value should be at least 1
+      rating: 1,
       title: "",
       comment: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("Form data: ", data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setSubmitStatus(null);
+    setSubmitError(null);
+    try {
+      const response = await fetch("http://localhost:3000/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, tripId, customerId }),
+      });
+      if (!response.ok) throw new Error("Failed to submit review");
+      await response.json();
+      setSubmitStatus("success");
+      form.reset();
+    } catch (err: any) {
+      setSubmitStatus("error");
+      setSubmitError(err.message || "Something went wrong.");
+    }
   };
 
   return (
-    <div className="max-xl mx-auto shadow-md rounded-lg p-6">
+    <div className="max-w-xl mx-auto shadow-md rounded-lg p-6 bg-white/80">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Rating Input */}
@@ -58,27 +81,15 @@ export default function CreateReview() {
                 <FormControl>
                   <RadioGroup
                     value={String(field.value)}
-                    onValueChange={field.onChange}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="1" id="rating-1" />
-                      <Label htmlFor="rating-1">1</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="2" id="rating-2" />
-                      <Label htmlFor="rating-2">2</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="3" id="rating-3" />
-                      <Label htmlFor="rating-3">3</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="4" id="rating-4" />
-                      <Label htmlFor="rating-4">4</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="5" id="rating-5" />
-                      <Label htmlFor="rating-5">5</Label>
-                    </div>
+                    onValueChange={(val) => field.onChange(Number(val))}
+                    className="flex flex-row gap-4"
+                  >
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <div className="flex items-center space-x-2" key={num}>
+                        <RadioGroupItem value={String(num)} id={`rating-${num}`} />
+                        <Label htmlFor={`rating-${num}`}>{num}</Label>
+                      </div>
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -127,6 +138,14 @@ export default function CreateReview() {
           <Button type="submit" className="w-full">
             Submit
           </Button>
+
+          {/* Feedback */}
+          {submitStatus === "success" && (
+            <div className="text-green-600 text-center">Review submitted successfully!</div>
+          )}
+          {submitStatus === "error" && (
+            <div className="text-red-600 text-center">{submitError || "Failed to submit review."}</div>
+          )}
         </form>
       </Form>
     </div>

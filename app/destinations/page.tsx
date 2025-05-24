@@ -15,6 +15,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/app/loading";
+
 interface Destination {
   id: number;
   agentId: number;
@@ -54,7 +56,7 @@ const Destinations = () => {
   }, []);
 
   if (error) return <div className="text-red-500">Error: {error}</div>;
-  if (!destinations.length) return <div>Loading...</div>;
+  if (!destinations.length) return <LoadingSpinner />;
 
   return (
     <div className="max-w-7xl mx-auto p-6">

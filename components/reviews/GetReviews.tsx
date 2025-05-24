@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LoadingSpinner } from "@/app/loading";
 
 interface Review {
   id: number;
@@ -27,15 +28,26 @@ interface GetReviewsProps {
 const GetReviews = ({ props }: { props: GetReviewsProps }) => {
   const id = props.id;
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function getReviews() {
-      const data = await fetch(`http://localhost:3000/reviews/${id}`);
-      const reviewsData = await data.json();
-      setReviews(reviewsData);
+      try {
+        const data = await fetch(`http://localhost:3000/reviews/${id}`);
+        const reviewsData = await data.json();
+        setReviews(reviewsData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
     }
     getReviews();
   }, [id]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   // Render stars based on rating
   const renderStars = (rating: number) => {
