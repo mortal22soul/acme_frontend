@@ -90,7 +90,7 @@ export default function AddDestination() {
       returnDate: data.returnDate?.toISOString(),
     };
     console.log("Formatted data: ", formattedData);
-    const res = await fetch("http://localhost:3000/trips", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/trips`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

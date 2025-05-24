@@ -21,8 +21,7 @@ interface GetItinerariesProps {
   id: number;
 }
 
-const GetItineraries = ({ props }: { props: GetItinerariesProps }) => {
-  const id = props.id;
+const GetItineraries = ({ id }: GetItinerariesProps) => {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,11 +30,13 @@ const GetItineraries = ({ props }: { props: GetItinerariesProps }) => {
     async function getItineraries() {
       try {
         setLoading(true);
-        const data = await fetch(`http://localhost:3000/itineraries/${id}`);
+        const data = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/itineraries/${id}`
+        );
         if (!data.ok) throw new Error("Failed to fetch itineraries");
         const itinerariesData = await data.json();
         setItineraries(itinerariesData);
-      } catch (err) {
+      } catch {
         setError("Could not load itineraries.");
       } finally {
         setLoading(false);

@@ -29,6 +29,14 @@ export default function Nav() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">
+          {/* CTA Button */}
+          <Link
+            href="/destinations"
+            className="flex items-center gap-1 font-medium text-white bg-black hover:bg-gray-800 transition-colors py-2 px-6 rounded-full">
+            <IconPlane className="h-4 w-4" />
+            <span>Explore Destinations</span>
+          </Link>
+
           {/* Combined Auth Button */}
           {isLoggedIn ? (
             <Link
@@ -42,17 +50,9 @@ export default function Nav() {
               href="/login"
               className="flex items-center gap-1 font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors py-2 px-4 rounded-full">
               <IconLogin className="h-4 w-4" />
-              <span>Login/Sign Up</span>
+              <span>Login</span>
             </Link>
           )}
-
-          {/* CTA Button */}
-          <Link
-            href="/destinations"
-            className="flex items-center gap-1 font-medium text-white bg-black hover:bg-gray-800 transition-colors py-2 px-6 rounded-full">
-            <IconPlane className="h-4 w-4" />
-            <span>Book Trip</span>
-          </Link>
         </div>
 
         {/* Mobile Menu Button */}

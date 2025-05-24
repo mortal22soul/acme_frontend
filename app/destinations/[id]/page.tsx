@@ -11,9 +11,18 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import GetReviews from "@/components/reviews/GetReviews";
-import GetItineraries from "@/components/itineraries/GetItenararies";
+import GetItineraries from "@/components/itineraries/GetItineraries";
 import { LoadingSpinner } from "@/app/loading";
-import { FaMapMarkerAlt, FaPlaneDeparture, FaPlaneArrival, FaChair, FaTag, FaCalendarAlt, FaRegListAlt, FaStar } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaPlaneDeparture,
+  FaPlaneArrival,
+  FaChair,
+  FaTag,
+  FaCalendarAlt,
+  FaRegListAlt,
+  FaStar,
+} from "react-icons/fa";
 
 interface Destination {
   id: number;
@@ -39,7 +48,9 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
   useEffect(() => {
     const fetchDestination = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/trips/${id}`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/trips/${id}`
+        );
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setDestination(data);
@@ -68,8 +79,7 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
             opts={{
               align: "center",
               loop: true,
-            }}
-          >
+            }}>
             <CarouselContent>
               {destination.images.map((imageUrl, index) => (
                 <CarouselItem key={index} className="flex justify-center">
@@ -90,7 +100,8 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
             <CarouselNext className="text-white bg-blue-700 hover:bg-blue-900 rounded-full p-2 shadow-md" />
           </Carousel>
           <div className="text-center text-sm text-gray-500 mt-2">
-            {destination.images.length} photo{destination.images.length > 1 ? "s" : ""}
+            {destination.images.length} photo
+            {destination.images.length > 1 ? "s" : ""}
           </div>
         </div>
 
@@ -99,7 +110,8 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
           <div className="flex items-center gap-3 text-lg text-gray-700">
             <FaMapMarkerAlt className="text-blue-700" />
             <span>
-              From <strong>{destination.origin}</strong> to <strong>{destination.destination}</strong>
+              From <strong>{destination.origin}</strong> to{" "}
+              <strong>{destination.destination}</strong>
             </span>
           </div>
           <div className="flex items-center gap-3 text-lg text-gray-700">
@@ -111,13 +123,21 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
           <div className="flex items-center gap-3 text-lg text-gray-700">
             <FaPlaneDeparture className="text-indigo-600" />
             <span>
-              Departure: <strong>{new Date(destination.departureDate).toLocaleDateString("en-IN")}</strong>
+              Departure:{" "}
+              <strong>
+                {new Date(destination.departureDate).toLocaleDateString(
+                  "en-IN"
+                )}
+              </strong>
             </span>
           </div>
           <div className="flex items-center gap-3 text-lg text-gray-700">
             <FaPlaneArrival className="text-indigo-600" />
             <span>
-              Return: <strong>{new Date(destination.returnDate).toLocaleDateString("en-IN")}</strong>
+              Return:{" "}
+              <strong>
+                {new Date(destination.returnDate).toLocaleDateString("en-IN")}
+              </strong>
             </span>
           </div>
           <div className="flex items-center gap-3 text-lg text-gray-700">
@@ -138,20 +158,17 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
         <div className="flex flex-wrap justify-center gap-4 mb-10">
           <Link
             href={`/reviews/${destination.id}`}
-            className="px-6 py-3 border-2 border-green-600 rounded-lg font-semibold text-white bg-green-600 hover:bg-white hover:text-green-600 hover:border-green-600 transition shadow"
-          >
+            className="px-6 py-3 border-2 border-green-600 rounded-lg font-semibold text-white bg-green-600 hover:bg-white hover:text-green-600 hover:border-green-600 transition shadow">
             Post Review
           </Link>
           <Link
             href={`/itinerary/${destination.id}`}
-            className="px-6 py-3 border-2 border-indigo-600 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-white hover:text-indigo-600 hover:border-indigo-600 transition shadow"
-          >
+            className="px-6 py-3 border-2 border-indigo-600 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-white hover:text-indigo-600 hover:border-indigo-600 transition shadow">
             Create Itinerary
           </Link>
           <Link
             href={`/bookings/${destination.id}`}
-            className="px-6 py-3 border-2 border-pink-600 rounded-lg font-semibold text-white bg-pink-600 hover:bg-white hover:text-pink-600 hover:border-pink-600 transition shadow"
-          >
+            className="px-6 py-3 border-2 border-pink-600 rounded-lg font-semibold text-white bg-pink-600 hover:bg-white hover:text-pink-600 hover:border-pink-600 transition shadow">
             Book Now
           </Link>
         </div>
@@ -160,10 +177,12 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-4">
               <FaRegListAlt className="text-indigo-600 text-2xl" />
-              <span className="font-semibold text-2xl text-blue-900">Itineraries</span>
+              <span className="font-semibold text-2xl text-blue-900">
+                Itineraries
+              </span>
             </div>
             <div className="bg-white/80 border border-indigo-100 rounded-xl shadow p-4 min-h-[120px]">
-              <GetItineraries props={{ id }} />
+              <GetItineraries id={id} />
             </div>
           </div>
 
@@ -171,7 +190,9 @@ const Destinations = ({ params }: { params: Promise<{ id: number }> }) => {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-4">
               <FaStar className="text-yellow-500 text-2xl" />
-              <span className="font-semibold text-2xl text-blue-900">Reviews</span>
+              <span className="font-semibold text-2xl text-blue-900">
+                Reviews
+              </span>
             </div>
             <div className="bg-white/80 border border-yellow-100 rounded-xl shadow p-4 min-h-[120px]">
               <GetReviews props={{ id }} />

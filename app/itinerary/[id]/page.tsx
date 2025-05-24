@@ -1,4 +1,4 @@
-import CreateItinerary from "@/components/itineraries/CreateItenarary";
+import CreateItinerary from "@/components/itineraries/CreateItinerary";
 
 export default function Itinerary() {
   return (

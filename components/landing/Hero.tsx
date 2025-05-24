@@ -25,7 +25,7 @@ export default function Hero() {
         <div className="flex items-center mt-6 space-x-4 ">
           <Link
             href="/destinations"
-            className="p-4 px-5 text-xs text-white bg-blue-500 rounded-full">
+            className="p-4 px-5 text-xs text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg">
             Book a Trip Now
           </Link>
           <Button className="p-2 bg-gray-200 rounded-full hover:bg-blue-500">

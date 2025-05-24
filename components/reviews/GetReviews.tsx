@@ -34,7 +34,9 @@ const GetReviews = ({ props }: { props: GetReviewsProps }) => {
   useEffect(() => {
     async function getReviews() {
       try {
-        const data = await fetch(`http://localhost:3000/reviews/${id}`);
+        const data = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/reviews/${id}`
+        );
         const reviewsData = await data.json();
         setReviews(reviewsData);
       } catch (err) {

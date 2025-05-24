@@ -23,8 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-
-
 const formSchema = z.object({
   rating: z.number().int().min(1, "Rating must be at least 1."),
   title: z.string().min(2, "Title must be at least 2 characters."),
@@ -32,7 +30,9 @@ const formSchema = z.object({
 });
 
 export default function CreateReview() {
-  const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(null);
+  const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(
+    null
+  );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const params = useParams();
 
@@ -52,18 +52,25 @@ export default function CreateReview() {
     setSubmitStatus(null);
     setSubmitError(null);
     try {
-      const response = await fetch("http://localhost:3000/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, tripId, customerId }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/reviews`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...data, tripId, customerId }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to submit review");
       await response.json();
       setSubmitStatus("success");
       form.reset();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setSubmitStatus("error");
-      setSubmitError(err.message || "Something went wrong.");
+      if (err instanceof Error) {
+        setSubmitError(err.message || "Something went wrong.");
+      } else {
+        setSubmitError("Something went wrong.");
+      }
     }
   };
 
@@ -82,11 +89,13 @@ export default function CreateReview() {
                   <RadioGroup
                     value={String(field.value)}
                     onValueChange={(val) => field.onChange(Number(val))}
-                    className="flex flex-row gap-4"
-                  >
+                    className="flex flex-row gap-4">
                     {[1, 2, 3, 4, 5].map((num) => (
                       <div className="flex items-center space-x-2" key={num}>
-                        <RadioGroupItem value={String(num)} id={`rating-${num}`} />
+                        <RadioGroupItem
+                          value={String(num)}
+                          id={`rating-${num}`}
+                        />
                         <Label htmlFor={`rating-${num}`}>{num}</Label>
                       </div>
                     ))}
@@ -141,10 +150,14 @@ export default function CreateReview() {
 
           {/* Feedback */}
           {submitStatus === "success" && (
-            <div className="text-green-600 text-center">Review submitted successfully!</div>
+            <div className="text-green-600 text-center">
+              Review submitted successfully!
+            </div>
           )}
           {submitStatus === "error" && (
-            <div className="text-red-600 text-center">{submitError || "Failed to submit review."}</div>
+            <div className="text-red-600 text-center">
+              {submitError || "Failed to submit review."}
+            </div>
           )}
         </form>
       </Form>

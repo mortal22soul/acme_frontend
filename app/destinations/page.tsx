@@ -40,7 +40,7 @@ const Destinations = () => {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const res = await fetch("http://localhost:3000/trips");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/trips`);
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setDestinations(data);

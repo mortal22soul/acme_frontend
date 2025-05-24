@@ -26,7 +26,9 @@ const formSchema = z.object({
 });
 
 export default function CreateItinerary() {
-  const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(null);
+  const [submitStatus, setSubmitStatus] = useState<null | "success" | "error">(
+    null
+  );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const params = useParams();
 
@@ -44,18 +46,25 @@ export default function CreateItinerary() {
     setSubmitStatus(null);
     setSubmitError(null);
     try {
-      const response = await fetch("http://localhost:3000/itineraries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, tripId }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/itineraries`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...data, tripId }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to submit itinerary");
       await response.json();
       setSubmitStatus("success");
       form.reset();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setSubmitStatus("error");
-      setSubmitError(err.message || "Something went wrong.");
+      if (err instanceof Error) {
+        setSubmitError(err.message || "Something went wrong.");
+      } else {
+        setSubmitError("Something went wrong.");
+      }
     }
   };
 
@@ -76,11 +85,13 @@ export default function CreateItinerary() {
                     min={1}
                     placeholder="Enter day number ..."
                     {...field}
-                    onChange={e => field.onChange(Number(e.target.value))}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
                 <FormMessage />
-                <FormDescription>Enter the day number for this activity.</FormDescription>
+                <FormDescription>
+                  Enter the day number for this activity.
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -96,12 +107,14 @@ export default function CreateItinerary() {
                   <Textarea
                     placeholder="Describe the activity ..."
                     {...field}
-                    onChange={e => field.onChange(e.target.value)}
+                    onChange={(e) => field.onChange(e.target.value)}
                     className="h-24"
                   />
                 </FormControl>
                 <FormMessage />
-                <FormDescription>Describe the activity for this day.</FormDescription>
+                <FormDescription>
+                  Describe the activity for this day.
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -113,10 +126,14 @@ export default function CreateItinerary() {
 
           {/* Feedback */}
           {submitStatus === "success" && (
-            <div className="text-green-600 text-center">Itinerary added successfully!</div>
+            <div className="text-green-600 text-center">
+              Itinerary added successfully!
+            </div>
           )}
           {submitStatus === "error" && (
-            <div className="text-red-600 text-center">{submitError || "Failed to add itinerary."}</div>
+            <div className="text-red-600 text-center">
+              {submitError || "Failed to add itinerary."}
+            </div>
           )}
         </form>
       </Form>

@@ -110,7 +110,7 @@ export default function Signup() {
       role: values.role,
     };
 
-    const userInfo = await fetch("http://localhost:3000/signup", {
+    const userInfo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export default function Signup() {
         phone: values.phone,
         region: values.region,
       };
-      info = await fetch("http://localhost:3000/agents", {
+      info = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/agents`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +145,7 @@ export default function Signup() {
         city: values.city,
         zip: values.zip,
       };
-      info = await fetch("http://localhost:3000/customers", {
+      info = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
